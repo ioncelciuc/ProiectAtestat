@@ -12,20 +12,38 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.tiberiuciuc.proiectatestat.Model.EarthQuake;
+import com.tiberiuciuc.proiectatestat.Util.Constants;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.Date;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     private LocationManager locationManager;
     private LocationListener locationListener;
+    private RequestQueue queue;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +53,72 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        queue = Volley.newRequestQueue(this);
+
+        getEarthQuakes();
+    }
+
+    private void getEarthQuakes() {
+
+        final EarthQuake earthQuake = new EarthQuake();
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                Request.Method.GET,
+                Constants.URL,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            JSONArray features = response.getJSONArray("features");
+                            for (int i = 0; i < Constants.LIMIT; i++) {
+                                //get the json
+                                JSONObject properties = features.getJSONObject(i).getJSONObject("properties");
+                                JSONObject geometry = features.getJSONObject(i).getJSONObject("geometry");
+                                JSONArray coordinates = geometry.getJSONArray("coordinates");
+                                double lon = coordinates.getDouble(0);
+                                double lat = coordinates.getDouble(1);
+
+                                //place json data in an object
+                                earthQuake.setPlace(properties.getString("place"));
+                                earthQuake.setType(properties.getString("type"));
+                                earthQuake.setTime(properties.getLong("time"));
+                                earthQuake.setMagnitude(properties.getDouble("mag"));
+                                earthQuake.setDetailLink(properties.getString("detail"));
+
+                                //format the date
+                                java.text.DateFormat dateFormat = java.text.DateFormat.getDateInstance();
+                                String formattedDate = dateFormat.format(new Date(earthQuake.getTime()).getTime());
+
+                                //add object to map
+                                MarkerOptions markerOptions = new MarkerOptions();
+                                markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
+                                markerOptions.title(earthQuake.getPlace());
+                                markerOptions.position(new LatLng(lat, lon));
+                                markerOptions.snippet(
+                                        "Magnitude: " + earthQuake.getMagnitude() + "\n" +
+                                                "Date: " + formattedDate
+                                );
+
+                                Marker marker = mMap.addMarker(markerOptions);
+                                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lon), 1));
+                                marker.setTag(earthQuake.getDetailLink());
+
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                    }
+                }
+        );
+
+        queue.add(jsonObjectRequest);
     }
 
 
@@ -74,7 +158,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             }
         };
-        
+
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
         } else {
