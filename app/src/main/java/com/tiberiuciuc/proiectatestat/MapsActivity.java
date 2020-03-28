@@ -6,6 +6,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -13,6 +14,10 @@ import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.webkit.WebView;
+import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -48,7 +53,8 @@ public class MapsActivity extends FragmentActivity implements
     private LocationManager locationManager;
     private LocationListener locationListener;
     private RequestQueue queue;
-
+    private AlertDialog.Builder dialogBuilder;
+    private AlertDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -197,6 +203,7 @@ public class MapsActivity extends FragmentActivity implements
     @Override
     public void onInfoWindowClick(Marker marker) {
         getQuakeDetails(marker.getTag().toString());
+
     }
 
     private void getQuakeDetails(String url) {
@@ -222,6 +229,32 @@ public class MapsActivity extends FragmentActivity implements
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                    }
+                }
+        );
+        queue.add(jsonObjectRequest);
+    }
+
+    public void getMoreDetails(String url){
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                Request.Method.GET,
+                url,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        dialogBuilder = new AlertDialog.Builder(MapsActivity.this);
+                        View view = getLayoutInflater().inflate(R.layout.popup,null);
+
+                        Button dismissButton = view.findViewById(R.id.dismissPop);
+                        Button dismissButtonTop = view.findViewById(R.id.dismissPopTop);
+                        TextView popList = view.findViewById(R.id.popList);
+                        WebView htmlPop = view.findViewById(R.id.htmlWebView);
                     }
                 },
                 new Response.ErrorListener() {
