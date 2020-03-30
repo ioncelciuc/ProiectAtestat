@@ -51,8 +51,6 @@ public class MapsActivity extends FragmentActivity implements
         GoogleMap.OnMarkerClickListener {
 
     private GoogleMap mMap;
-    private LocationManager locationManager;
-    private LocationListener locationListener;
     private RequestQueue queue;
     private AlertDialog.Builder dialogBuilder;
     private AlertDialog dialog;
@@ -159,62 +157,6 @@ public class MapsActivity extends FragmentActivity implements
         mMap.setInfoWindowAdapter(new CustomInfoWindow(getApplicationContext()));
         mMap.setOnInfoWindowClickListener(this);
         mMap.setOnMarkerClickListener(this);
-        /*
-        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        locationListener = new LocationListener() {
-            @Override
-            public void onLocationChanged(Location location) {
-
-            }
-
-            @Override
-            public void onStatusChanged(String s, int i, Bundle bundle) {
-
-            }
-
-            @Override
-            public void onProviderEnabled(String s) {
-
-            }
-
-            @Override
-            public void onProviderDisabled(String s) {
-
-            }
-        };
-
-        //shady problem here...
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            //Ask for permission
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-
-
-        } else {
-            // we have permission!
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
-            Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-            mMap.addMarker(new MarkerOptions()
-                    .position(latLng)
-                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
-                    .title("You are here"));
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 8));
-
-        }
-        //it's somewhere in this block of code
-        */
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
-            }
-            Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        }
     }
 
     @Override
