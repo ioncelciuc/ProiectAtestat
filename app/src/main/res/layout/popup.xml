@@ -9,64 +9,71 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <RelativeLayout
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
 
-            <TextView
-                android:id="@+id/popTitle"
-                android:layout_width="wrap_content"
+            <RelativeLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:text="More information"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+                android:padding="25dp">
 
-            <Button
-                android:id="@+id/dismissPopTop"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_below="@id/popTitle"
-                android:layout_alignParentRight="true"
-                android:background="@android:drawable/ic_menu_close_clear_cancel" />
+                <TextView
+                    android:id="@+id/popTitle"
+                    android:padding="8dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:text="More information"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/popListTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/popTitle"
-                android:text="Surrounding cities"
-                android:textSize="17sp" />
+                <Button
+                    android:id="@+id/dismissPopTop"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_below="@id/popTitle"
+                    android:layout_alignParentRight="true"
+                    android:background="@android:drawable/ic_menu_close_clear_cancel" />
 
-            <TextView
-                android:id="@+id/popList"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/popListTitle"
-                android:text="Hello"
-                android:textSize="15sp" />
+                <TextView
+                    android:id="@+id/popListTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/popTitle"
+                    android:text="Surrounding cities"
+                    android:textSize="17sp" />
 
-            <WebView
-                android:id="@+id/htmlWebView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/popList"
-                tools:ignore="WebViewLayout">
+                <TextView
+                    android:id="@+id/popList"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/popListTitle"
+                    android:text="Hello"
+                    android:textSize="15sp" />
 
-            </WebView>
+                <WebView
+                    android:id="@+id/htmlWebView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/popList"
+                    tools:ignore="WebViewLayout">
 
-            <Button
-                android:id="@+id/dismissPop"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/htmlWebView"
-                android:layout_centerHorizontal="true"
-                android:background="@color/colorAccent"
-                android:text="close"
-                android:textColor="@android:color/white"
-                android:textStyle="bold" />
+                </WebView>
 
-        </RelativeLayout>
+                <Button
+                    android:id="@+id/dismissPop"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/htmlWebView"
+                    android:layout_centerHorizontal="true"
+                    android:background="@color/colorAccent"
+                    android:text="close"
+                    android:textColor="@android:color/white"
+                    android:textStyle="bold" />
+
+            </RelativeLayout>
+        </androidx.cardview.widget.CardView>
     </ScrollView>
 
 </LinearLayout>

@@ -173,6 +173,7 @@ public class MapsActivity extends FragmentActivity implements
             }
         };
 
+        //shady problem here...
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
         } else {
@@ -186,6 +187,7 @@ public class MapsActivity extends FragmentActivity implements
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 4));
         }
+        //it's somewhere in this block of code
 
     }
 
@@ -226,6 +228,7 @@ public class MapsActivity extends FragmentActivity implements
                                 detailsUrl = geoJsonObj.getString("url");
                             }
                             Log.d("DETAILS_URL", detailsUrl);
+                            getMoreDetails(detailsUrl);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -241,7 +244,7 @@ public class MapsActivity extends FragmentActivity implements
         queue.add(jsonObjectRequest);
     }
 
-    public void getMoreDetails(String url){
+    public void getMoreDetails(String url) {
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                 Request.Method.GET,
                 url,
@@ -249,12 +252,62 @@ public class MapsActivity extends FragmentActivity implements
                     @Override
                     public void onResponse(JSONObject response) {
                         dialogBuilder = new AlertDialog.Builder(MapsActivity.this);
-                        View view = getLayoutInflater().inflate(R.layout.popup,null);
+                        View view = getLayoutInflater().inflate(R.layout.popup, null);
 
                         Button dismissButton = view.findViewById(R.id.dismissPop);
                         Button dismissButtonTop = view.findViewById(R.id.dismissPopTop);
                         TextView popList = view.findViewById(R.id.popList);
                         WebView htmlPop = view.findViewById(R.id.htmlWebView);
+
+                        StringBuilder stringBuilder = new StringBuilder();
+                        try {
+                            if (response.has("tectonicSummary") && response.getString("tectonicSummary") != null) {
+                                JSONObject tectonic = response.getJSONObject("tectonicSummary");
+                                if (tectonic.has("text") && tectonic.getString("text") != null) {
+                                    String text = tectonic.getString("text");
+                                    htmlPop.loadDataWithBaseURL(
+                                            null,
+                                            text, //String data
+                                            "text/html",
+                                            "UTF-8",
+                                            null
+                                    );
+                                }
+                            }
+                            JSONArray cities = response.getJSONArray("cities");
+                            for (int i = 0; i < cities.length(); i++) {
+                                JSONObject citiesObj = cities.getJSONObject(i);
+                                stringBuilder.append("City: " +
+                                        citiesObj.getString("name") + "\n" +
+                                        "Distance: " +
+                                        citiesObj.getString("distance") + " KM\n" +
+                                        "Population: " +
+                                        citiesObj.getString("population")
+                                );
+                                stringBuilder.append("\n\n");
+                            }
+                            popList.setText(stringBuilder);
+
+                            dismissButton.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    dialog.dismiss();
+                                }
+                            });
+                            dismissButtonTop.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    dialog.dismiss();
+                                }
+                            });
+
+
+                            dialogBuilder.setView(view);
+                            dialog = dialogBuilder.create();
+                            dialog.show();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
                 },
                 new Response.ErrorListener() {
