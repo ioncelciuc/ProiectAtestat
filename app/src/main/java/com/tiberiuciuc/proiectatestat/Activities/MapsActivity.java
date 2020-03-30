@@ -1,4 +1,4 @@
-package com.tiberiuciuc.proiectatestat;
+package com.tiberiuciuc.proiectatestat.Activities;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -7,18 +7,17 @@ import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -35,6 +34,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.tiberiuciuc.proiectatestat.Model.EarthQuake;
+import com.tiberiuciuc.proiectatestat.R;
 import com.tiberiuciuc.proiectatestat.UI.CustomInfoWindow;
 import com.tiberiuciuc.proiectatestat.Util.Constants;
 
@@ -56,6 +56,8 @@ public class MapsActivity extends FragmentActivity implements
     private AlertDialog.Builder dialogBuilder;
     private AlertDialog dialog;
 
+    private Button showListBtn;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,6 +66,14 @@ public class MapsActivity extends FragmentActivity implements
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        showListBtn = findViewById(R.id.showListBtn);
+        showListBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MapsActivity.this, QuakesListActivity.class));
+            }
+        });
 
         queue = Volley.newRequestQueue(this);
 
