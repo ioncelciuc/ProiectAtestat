@@ -12,6 +12,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -92,7 +93,7 @@ public class MapsActivity extends FragmentActivity implements
                     public void onResponse(JSONObject response) {
                         try {
                             JSONArray features = response.getJSONArray("features");
-                            for (int i = 0; i < Constants.LIMIT; i++) {
+                            for (int i = 0; i < features.length(); i++) {
                                 //get the json
                                 JSONObject properties = features.getJSONObject(i).getJSONObject("properties");
                                 JSONObject geometry = features.getJSONObject(i).getJSONObject("geometry");
@@ -151,16 +152,6 @@ public class MapsActivity extends FragmentActivity implements
         queue.add(jsonObjectRequest);
     }
 
-
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -168,7 +159,7 @@ public class MapsActivity extends FragmentActivity implements
         mMap.setInfoWindowAdapter(new CustomInfoWindow(getApplicationContext()));
         mMap.setOnInfoWindowClickListener(this);
         mMap.setOnMarkerClickListener(this);
-
+        /*
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         locationListener = new LocationListener() {
             @Override
@@ -193,21 +184,26 @@ public class MapsActivity extends FragmentActivity implements
         };
 
         //shady problem here...
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            //Ask for permission
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+
+
         } else {
-            //utilizatorul a acceptat permisiunea de a utiliza locatia device-ului
+            // we have permission!
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
             Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
             LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
             mMap.addMarker(new MarkerOptions()
                     .position(latLng)
-                    .title("You are here!")
-                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 4));
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
+                    .title("You are here"));
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 8));
+
         }
         //it's somewhere in this block of code
-
+        */
     }
 
     @Override
