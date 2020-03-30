@@ -96,6 +96,8 @@ public class MapsActivity extends FragmentActivity implements
                                 earthQuake.setTime(properties.getLong("time"));
                                 earthQuake.setMagnitude(properties.getDouble("mag"));
                                 earthQuake.setDetailLink(properties.getString("detail"));
+                                earthQuake.setLat(lat);
+                                earthQuake.setLon(lon);
 
                                 //format the date
                                 java.text.DateFormat dateFormat = java.text.DateFormat.getDateInstance();
@@ -103,7 +105,14 @@ public class MapsActivity extends FragmentActivity implements
 
                                 //add object to map
                                 MarkerOptions markerOptions = new MarkerOptions();
-                                markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
+                                if (earthQuake.getMagnitude() <= 2)
+                                    markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+                                else if (earthQuake.getMagnitude() <= 5)
+                                    markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
+                                else if (earthQuake.getMagnitude() <= 8)
+                                    markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
+                                else
+                                    markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
                                 markerOptions.title(earthQuake.getPlace());
                                 markerOptions.position(new LatLng(lat, lon));
                                 markerOptions.snippet(
