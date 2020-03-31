@@ -58,7 +58,6 @@ public class MapsActivity extends FragmentActivity implements
     private AlertDialog.Builder dialogBuilder;
     private AlertDialog dialog;
 
-    private Button showListBtn;
     private FloatingActionButton fabShowList;
     private FloatingActionButton fabSettings;
 
