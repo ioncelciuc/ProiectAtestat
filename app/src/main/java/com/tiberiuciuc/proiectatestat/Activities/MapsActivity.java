@@ -19,6 +19,7 @@ import android.view.View;
 import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -26,6 +27,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.github.clans.fab.FloatingActionButton;
+import com.github.clans.fab.FloatingActionMenu;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -56,6 +59,8 @@ public class MapsActivity extends FragmentActivity implements
     private AlertDialog dialog;
 
     private Button showListBtn;
+    private FloatingActionButton fabShowList;
+    private FloatingActionButton fabSettings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,11 +71,19 @@ public class MapsActivity extends FragmentActivity implements
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        showListBtn = findViewById(R.id.showListBtn);
-        showListBtn.setOnClickListener(new View.OnClickListener() {
+        fabShowList = findViewById(R.id.floating_action_show_list);
+        fabSettings = findViewById(R.id.floating_action_settings);
+
+        fabShowList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(MapsActivity.this, QuakesListActivity.class));
+            }
+        });
+        fabSettings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(MapsActivity.this, "Settings to be done", Toast.LENGTH_SHORT).show();
             }
         });
 
