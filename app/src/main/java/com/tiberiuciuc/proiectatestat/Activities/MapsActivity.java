@@ -82,7 +82,7 @@ public class MapsActivity extends FragmentActivity implements
         fabSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(MapsActivity.this, "Settings to be done", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(MapsActivity.this, SettingsActivity.class));
             }
         });
 
@@ -97,7 +97,7 @@ public class MapsActivity extends FragmentActivity implements
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                 Request.Method.GET,
-                Constants.URL,
+                Constants.getInstance().getURL(),
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
@@ -165,7 +165,7 @@ public class MapsActivity extends FragmentActivity implements
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+        mMap.setMapType(Constants.getInstance().getMAP_TYPE());
         mMap.setInfoWindowAdapter(new CustomInfoWindow(getApplicationContext()));
         mMap.setOnInfoWindowClickListener(this);
         mMap.setOnMarkerClickListener(this);

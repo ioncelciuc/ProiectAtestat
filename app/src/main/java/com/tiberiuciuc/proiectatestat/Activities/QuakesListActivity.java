@@ -47,7 +47,7 @@ public class QuakesListActivity extends AppCompatActivity {
         queue = Volley.newRequestQueue(this);
         arrayList = new ArrayList<>();
 
-        getAllQuakes(Constants.URL);
+        getAllQuakes(Constants.getInstance().getURL());
     }
 
     void getAllQuakes(String url) {

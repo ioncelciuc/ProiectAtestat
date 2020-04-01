@@ -1,28 +1,68 @@
 package com.tiberiuciuc.proiectatestat.Util;
 
+import java.net.ContentHandler;
+
 public class Constants {
-    public static final String URL = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/significant_month.geojson";
-    public static final int LIMIT = 30; //maxim 30 markere pe harta
 
-    //significant 30 days:
-    //https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/significant_month.geojson
-    //M4.5+ 30 days:
-    //https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_month.geojson
-    //All earthquakes 30 days(o sa crape, sunt multe):
-    //https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.geojson
+    //----------------------------SINGLETON CLASS-------------------------------------
 
-    //significant past week:
-    //https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/significant_week.geojson
-    //M4.5+ past week:
-    //https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_week.geojson
-    //All earthquakes past week(posibil sa crape?):
-    //https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson
+    //instanta privata, asa ca poate fi accesata doar prin getInstance();
+    private static Constants instance;
 
-    //significant today (poate fi gol):
-    //https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/significant_day.geojson
-    //all today:
-    //https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_day.geojson
+    private Constants(){
+        //constructor privat
+    }
 
-    //All earthquakes past hour:
-    //https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_hour.geojson
+    //functie sincronizata pentru a putea fi controlat accesul simultan
+    synchronized public static Constants getInstance()
+    {
+        //daca nu e nicio instanta a clasei, se initializeaza
+        if (instance == null) instance = new Constants();
+        return instance;
+    }
+
+    //------------------------------SINGLETON CLASS-----------------------------
+
+    private String pastMonth_ALL = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.geojson";
+    private String pastMonth_SIGNIFICANT = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/significant_month.geojson";
+    private String pastMonth_M4_5PLUS = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_month.geojson";
+    private String pastWeek_ALL = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson";
+    private String pastWeek_SIGNIFICANT = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/significant_week.geojson";
+    private String pastWeek_M4_5PLUS = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_week.geojson";
+    private String pastDay_ALL = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_day.geojson";
+    private String pastDay_SIGNIFICANT = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/significant_day.geojson";
+    private String pastHour_ALL = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_hour.geojson";
+
+    private int MAP_TYPE = 4;
+
+    public int getMAP_TYPE() {
+        return MAP_TYPE;
+    }
+
+    public void setMAP_TYPE(int MAP_TYPE) {
+        //1 = normal
+        //2 = satellite
+        //3 = terrain
+        //4 = hybrid
+        this.MAP_TYPE = MAP_TYPE;
+    }
+
+    public int getLIMIT() {
+        return LIMIT;
+    }
+
+    public void setLIMIT(int LIMIT) {
+        this.LIMIT = LIMIT;
+    }
+
+    private String URL = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/significant_month.geojson";
+    private int LIMIT = 30; //maxim 30 markere pe harta
+
+    public String getURL() {
+        return URL;
+    }
+
+    public void setURL(String URL) {
+        this.URL = URL;
+    }
 }

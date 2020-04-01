@@ -17,7 +17,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".Activities.QuakesListActivity"></activity>
+        <activity android:name=".Activities.SettingsActivity"></activity>
+        <activity android:name=".Activities.QuakesListActivity" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
