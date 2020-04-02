@@ -24,7 +24,11 @@ public class Constants {
     }
 
     //------------------------------SINGLETON CLASS-----------------------------
+
     public static final String SETTINGS = "settings_prefs";
+
+    private String BASE_URL = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/";
+
     private String pastMonth_ALL = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.geojson";
     private String pastMonth_SIGNIFICANT = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/significant_month.geojson";
     private String pastMonth_M4_5PLUS = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_month.geojson";
@@ -34,6 +38,9 @@ public class Constants {
     private String pastDay_ALL = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_day.geojson";
     private String pastDay_SIGNIFICANT = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/significant_day.geojson";
     private String pastHour_ALL = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_hour.geojson";
+
+    private String URL = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/significant_month.geojson";
+    private int LIMIT = 30; //maxim 30 markere pe harta
 
     private int MAP_TYPE = 4;
     private int MAP_TYPE_PREPARE_CHANGES;
@@ -53,9 +60,6 @@ public class Constants {
     public void setLIMIT(int LIMIT) {
         this.LIMIT = LIMIT;
     }
-
-    private String URL = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/significant_month.geojson";
-    private int LIMIT = 30; //maxim 30 markere pe harta
 
     public String getURL() {
         return URL;
