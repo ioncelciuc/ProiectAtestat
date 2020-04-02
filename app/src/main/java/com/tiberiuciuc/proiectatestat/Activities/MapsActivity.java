@@ -8,6 +8,7 @@ import androidx.fragment.app.FragmentActivity;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -69,6 +70,13 @@ public class MapsActivity extends FragmentActivity implements
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        //get data saved on device back
+        SharedPreferences getSharedData = getSharedPreferences(Constants.SETTINGS, MODE_PRIVATE);
+        Constants.getInstance().setMAP_TYPE(getSharedData.getInt("MAP_TYPE", 4));
+
+
+        //The rest of the app is now loading
 
         fabShowList = findViewById(R.id.floating_action_show_list);
         fabSettings = findViewById(R.id.floating_action_settings);

@@ -1,5 +1,7 @@
 package com.tiberiuciuc.proiectatestat.Util;
 
+import android.content.SharedPreferences;
+
 import java.net.ContentHandler;
 
 public class Constants {
@@ -22,7 +24,7 @@ public class Constants {
     }
 
     //------------------------------SINGLETON CLASS-----------------------------
-
+    public static final String SETTINGS = "settings_prefs";
     private String pastMonth_ALL = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.geojson";
     private String pastMonth_SIGNIFICANT = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/significant_month.geojson";
     private String pastMonth_M4_5PLUS = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_month.geojson";
@@ -34,16 +36,13 @@ public class Constants {
     private String pastHour_ALL = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_hour.geojson";
 
     private int MAP_TYPE = 4;
+    private int MAP_TYPE_PREPARE_CHANGES;
 
     public int getMAP_TYPE() {
         return MAP_TYPE;
     }
 
     public void setMAP_TYPE(int MAP_TYPE) {
-        //1 = normal
-        //2 = satellite
-        //3 = terrain
-        //4 = hybrid
         this.MAP_TYPE = MAP_TYPE;
     }
 
@@ -64,5 +63,13 @@ public class Constants {
 
     public void setURL(String URL) {
         this.URL = URL;
+    }
+
+    public void prepareMapTypeChanges(int MAP_TYPE_PREPARE_CHANGES){
+        this.MAP_TYPE_PREPARE_CHANGES = MAP_TYPE_PREPARE_CHANGES;
+    }
+
+    public int getMAP_TYPE_PREPARE_CHANGES() {
+        return MAP_TYPE_PREPARE_CHANGES;
     }
 }
