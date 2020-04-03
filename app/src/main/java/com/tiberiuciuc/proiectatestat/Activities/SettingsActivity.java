@@ -136,6 +136,7 @@ public class SettingsActivity extends AppCompatActivity {
                 editor.apply();
 
                 startActivity(new Intent(SettingsActivity.this, MapsActivity.class));
+                finish();
             }
         });
     }
