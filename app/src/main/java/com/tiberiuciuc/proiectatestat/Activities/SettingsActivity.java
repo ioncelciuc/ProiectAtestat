@@ -28,8 +28,21 @@ public class SettingsActivity extends AppCompatActivity {
     private RadioButton rbSatellite;
     private RadioButton rbTerrain;
     private RadioButton rbHybrid;
-    private Button applyChanges;
 
+    private RadioGroup radioGroupType;
+    private RadioButton rbSignificant;
+    private RadioButton rb4_5Plus;
+    private RadioButton rb2_5Plus;
+    private RadioButton rb1_0Plus;
+    private RadioButton rbAll;
+
+    private RadioGroup radioGroupTimePeriod;
+    private RadioButton rbMonth;
+    private RadioButton rbWeek;
+    private RadioButton rbDay;
+    private RadioButton rbHour;
+
+    private Button applyChanges;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,23 +54,21 @@ public class SettingsActivity extends AppCompatActivity {
         rbSatellite = findViewById(R.id.rb_satellite);
         rbTerrain = findViewById(R.id.rb_terrain);
         rbHybrid = findViewById(R.id.rb_hybrid);
+
+        radioGroupType = findViewById(R.id.radio_group_type);
+        rbSignificant = findViewById(R.id.rb_significant);
+        rb4_5Plus = findViewById(R.id.rb_M4_5PLUS);
+        rb2_5Plus = findViewById(R.id.rb_M2_5PLUS);
+        rb1_0Plus = findViewById(R.id.rb_M1_0PLUS);
+        rbAll = findViewById(R.id.rb_all_earthquakes);
+
+        radioGroupTimePeriod = findViewById(R.id.radio_group_time_period);
+        rbMonth = findViewById(R.id.rb_past_month);
+        rbWeek = findViewById(R.id.rb_past_week);
+        rbDay = findViewById(R.id.rb_past_day);
+        rbHour = findViewById(R.id.rb_past_hour);
+
         applyChanges = findViewById(R.id.btn_apply_changes);
-
-        applyChanges.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Constants.getInstance().setMAP_TYPE(Constants.getInstance().getMAP_TYPE_PREPARE_CHANGES());
-                //Constants.getInstance().setURL();
-
-                SharedPreferences sharedPreferences = getSharedPreferences(Constants.SETTINGS, MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putInt("MAP_TYPE", Constants.getInstance().getMAP_TYPE());
-                editor.putString("URL", Constants.getInstance().getURL());
-                editor.apply();
-
-                startActivity(new Intent(SettingsActivity.this, MapsActivity.class));
-            }
-        });
 
         switch (Constants.getInstance().getMAP_TYPE()) {
             case 1:
@@ -73,6 +84,51 @@ public class SettingsActivity extends AppCompatActivity {
                 rbHybrid.toggle();
                 break;
         }
+
+        switch (Constants.getInstance().getURL_TYPE()){
+            case "significant":
+                rbSignificant.toggle();
+                break;
+            case "4.5":
+                rb4_5Plus.toggle();
+            case  "2.5":
+                rb2_5Plus.toggle();
+            case "1.0":
+                rb1_0Plus.toggle();
+            case "all":
+                rbAll.toggle();
+        }
+
+        switch (Constants.getInstance().getURL_PERIOD()){
+            case "month":
+                rbMonth.toggle();
+                break;
+            case "week":
+                rbWeek.toggle();
+            case "day":
+                rbDay.toggle();
+            case "hour":
+                rbHour.toggle();
+        }
+
+        applyChanges.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Constants.getInstance().setMAP_TYPE(Constants.getInstance().getMAP_TYPE_PREPARE_CHANGES());
+                //Constants.getInstance().setURL();
+
+                SharedPreferences sharedPreferences = getSharedPreferences(Constants.SETTINGS, MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+
+                editor.putInt("MAP_TYPE", Constants.getInstance().getMAP_TYPE());
+                
+                editor.putString("URL", Constants.getInstance().getURL());
+
+                editor.apply();
+
+                startActivity(new Intent(SettingsActivity.this, MapsActivity.class));
+            }
+        });
     }
 
 

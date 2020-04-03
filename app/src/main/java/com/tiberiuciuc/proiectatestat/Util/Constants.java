@@ -27,7 +27,6 @@ public class Constants {
 
     public static final String SETTINGS = "settings_prefs";
 
-    private String BASE_URL = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/";
 
     private String pastMonth_ALL = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.geojson";
     private String pastMonth_SIGNIFICANT = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/significant_month.geojson";
@@ -39,12 +38,16 @@ public class Constants {
     private String pastDay_SIGNIFICANT = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/significant_day.geojson";
     private String pastHour_ALL = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_hour.geojson";
 
-    private String URL = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/significant_month.geojson";
-    private int LIMIT = 30; //maxim 30 markere pe harta
-
     private int MAP_TYPE = 4;
     private int MAP_TYPE_PREPARE_CHANGES;
 
+    private String URL = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/significant_month.geojson";
+    private String URL_BASE = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/";
+    private String URL_TYPE = "significant";
+    private String URL_PERIOD = "month";
+    private String URL_END = ".geojson";
+
+    //MAP TYPE
     public int getMAP_TYPE() {
         return MAP_TYPE;
     }
@@ -53,14 +56,15 @@ public class Constants {
         this.MAP_TYPE = MAP_TYPE;
     }
 
-    public int getLIMIT() {
-        return LIMIT;
+    public void prepareMapTypeChanges(int MAP_TYPE_PREPARE_CHANGES){
+        this.MAP_TYPE_PREPARE_CHANGES = MAP_TYPE_PREPARE_CHANGES;
     }
 
-    public void setLIMIT(int LIMIT) {
-        this.LIMIT = LIMIT;
+    public int getMAP_TYPE_PREPARE_CHANGES() {
+        return MAP_TYPE_PREPARE_CHANGES;
     }
 
+    //URL
     public String getURL() {
         return URL;
     }
@@ -69,11 +73,19 @@ public class Constants {
         this.URL = URL;
     }
 
-    public void prepareMapTypeChanges(int MAP_TYPE_PREPARE_CHANGES){
-        this.MAP_TYPE_PREPARE_CHANGES = MAP_TYPE_PREPARE_CHANGES;
+    public String getURL_TYPE() {
+        return URL_TYPE;
     }
 
-    public int getMAP_TYPE_PREPARE_CHANGES() {
-        return MAP_TYPE_PREPARE_CHANGES;
+    public void setURL_TYPE(String URL_TYPE) {
+        this.URL_TYPE = URL_TYPE;
+    }
+
+    public String getURL_PERIOD() {
+        return URL_PERIOD;
+    }
+
+    public void setURL_PERIOD(String URL_PERIOD) {
+        this.URL_PERIOD = URL_PERIOD;
     }
 }
