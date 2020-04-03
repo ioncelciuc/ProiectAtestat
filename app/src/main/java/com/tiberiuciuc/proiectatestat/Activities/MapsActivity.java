@@ -74,7 +74,9 @@ public class MapsActivity extends FragmentActivity implements
         //get data saved on device back
         SharedPreferences getSharedData = getSharedPreferences(Constants.SETTINGS, MODE_PRIVATE);
         Constants.getInstance().setMAP_TYPE(getSharedData.getInt("MAP_TYPE", 4));
-
+        Constants.getInstance().setURL(getSharedData.getString("URL", "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/significant_month.geojson"));
+        Constants.getInstance().setURL_TYPE(getSharedData.getString("URL_TYPE", "significant"));
+        Constants.getInstance().setURL_PERIOD(getSharedData.getString("URL_PERIOD", "month"));
 
         //The rest of the app is now loading
 

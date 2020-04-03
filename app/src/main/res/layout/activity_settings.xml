@@ -96,30 +96,35 @@
                     android:id="@+id/rb_significant"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:onClick="onEarthquakeTypeChosen"
                     android:text="SIGNIFICANT" />
 
                 <RadioButton
                     android:id="@+id/rb_M4_5PLUS"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:onClick="onEarthquakeTypeChosen"
                     android:text="MAGNITUDE 4.5+" />
 
                 <RadioButton
                     android:id="@+id/rb_M2_5PLUS"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:onClick="onEarthquakeTypeChosen"
                     android:text="MAGNITUDE 2.5+" />
 
                 <RadioButton
                     android:id="@+id/rb_M1_0PLUS"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:onClick="onEarthquakeTypeChosen"
                     android:text="MAGNITUDE 1.0+" />
 
                 <RadioButton
                     android:id="@+id/rb_all_earthquakes"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:onClick="onEarthquakeTypeChosen"
                     android:text="ALL EARTHQUAKES" />
             </RadioGroup>
 
@@ -147,24 +152,28 @@
                     android:id="@+id/rb_past_month"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:onClick="onEarthquakeTimePeriodChosen"
                     android:text="PAST 30 DAYS" />
 
                 <RadioButton
                     android:id="@+id/rb_past_week"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:onClick="onEarthquakeTimePeriodChosen"
                     android:text="PAST 7 DAYS" />
 
                 <RadioButton
                     android:id="@+id/rb_past_day"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:onClick="onEarthquakeTimePeriodChosen"
                     android:text="PAST DAY" />
 
                 <RadioButton
                     android:id="@+id/rb_past_hour"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:onClick="onEarthquakeTimePeriodChosen"
                     android:text="PAST HOUR" />
 
             </RadioGroup>

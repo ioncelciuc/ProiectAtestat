@@ -70,7 +70,9 @@ public class SettingsActivity extends AppCompatActivity {
 
         applyChanges = findViewById(R.id.btn_apply_changes);
 
-        switch (Constants.getInstance().getMAP_TYPE()) {
+        SharedPreferences getSharedData = getSharedPreferences(Constants.SETTINGS, MODE_PRIVATE);
+
+        switch (getSharedData.getInt("MAP_TYPE", 4)) {
             case 1:
                 rbNormal.toggle();
                 break;
@@ -85,13 +87,13 @@ public class SettingsActivity extends AppCompatActivity {
                 break;
         }
 
-        switch (Constants.getInstance().getURL_TYPE()){
+        switch (getSharedData.getString("URL_TYPE", "significant")) {
             case "significant":
                 rbSignificant.toggle();
                 break;
             case "4.5":
                 rb4_5Plus.toggle();
-            case  "2.5":
+            case "2.5":
                 rb2_5Plus.toggle();
             case "1.0":
                 rb1_0Plus.toggle();
@@ -99,7 +101,7 @@ public class SettingsActivity extends AppCompatActivity {
                 rbAll.toggle();
         }
 
-        switch (Constants.getInstance().getURL_PERIOD()){
+        switch (getSharedData.getString("URL_PERIOD", "month")) {
             case "month":
                 rbMonth.toggle();
                 break;
@@ -114,14 +116,21 @@ public class SettingsActivity extends AppCompatActivity {
         applyChanges.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Constants.getInstance().setMAP_TYPE(Constants.getInstance().getMAP_TYPE_PREPARE_CHANGES());
                 //Constants.getInstance().setURL();
 
                 SharedPreferences sharedPreferences = getSharedPreferences(Constants.SETTINGS, MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
 
                 editor.putInt("MAP_TYPE", Constants.getInstance().getMAP_TYPE());
-                
+
+                editor.putString("URL_TYPE", Constants.getInstance().getURL_TYPE());
+                editor.putString("URL_PERIOD", Constants.getInstance().getURL_PERIOD());
+                String buildUrl = Constants.getInstance().getURL_BASE() +
+                        Constants.getInstance().getURL_TYPE() +
+                        "_" +
+                        Constants.getInstance().getURL_PERIOD() +
+                        Constants.getInstance().getURL_END();
+                Constants.getInstance().setURL(buildUrl);
                 editor.putString("URL", Constants.getInstance().getURL());
 
                 editor.apply();
@@ -136,22 +145,77 @@ public class SettingsActivity extends AppCompatActivity {
         switch (view.getId()) {
             case R.id.rb_normal:
                 if (rbNormal.isChecked()) {
-                    Constants.getInstance().prepareMapTypeChanges(1);
+                    Constants.getInstance().setMAP_TYPE(1);
                 }
                 break;
             case R.id.rb_satellite:
                 if (rbSatellite.isChecked()) {
-                    Constants.getInstance().prepareMapTypeChanges(2);
+                    Constants.getInstance().setMAP_TYPE(2);
                 }
                 break;
             case R.id.rb_terrain:
                 if (rbTerrain.isChecked()) {
-                    Constants.getInstance().prepareMapTypeChanges(3);
+                    Constants.getInstance().setMAP_TYPE(3);
                 }
                 break;
             case R.id.rb_hybrid:
                 if (rbHybrid.isChecked()) {
-                    Constants.getInstance().prepareMapTypeChanges(4);
+                    Constants.getInstance().setMAP_TYPE(4);
+                }
+                break;
+        }
+    }
+
+    public void onEarthquakeTypeChosen(View view) {
+        switch (view.getId()) {
+            case R.id.rb_significant:
+                if (rbSignificant.isChecked()) {
+                    Constants.getInstance().setURL_TYPE("significant");
+                }
+                break;
+            case R.id.rb_M4_5PLUS:
+                if (rb4_5Plus.isChecked()) {
+                    Constants.getInstance().setURL_TYPE("4.5");
+                }
+                break;
+            case R.id.rb_M2_5PLUS:
+                if (rb2_5Plus.isChecked()) {
+                    Constants.getInstance().setURL_TYPE("2.5");
+                }
+                break;
+            case R.id.rb_M1_0PLUS:
+                if (rb1_0Plus.isChecked()) {
+                    Constants.getInstance().setURL_TYPE("1.0");
+                }
+                break;
+            case R.id.rb_all_earthquakes:
+                if (rbAll.isChecked()) {
+                    Constants.getInstance().setURL_TYPE("all");
+                }
+                break;
+        }
+    }
+
+    public void onEarthquakeTimePeriodChosen(View view) {
+        switch (view.getId()) {
+            case R.id.rb_past_month:
+                if (rbMonth.isChecked()) {
+                    Constants.getInstance().setURL_PERIOD("month");
+                }
+                break;
+            case R.id.rb_past_week:
+                if (rbWeek.isChecked()) {
+                    Constants.getInstance().setURL_PERIOD("week");
+                }
+                break;
+            case R.id.rb_past_day:
+                if (rbDay.isChecked()) {
+                    Constants.getInstance().setURL_PERIOD("day");
+                }
+                break;
+            case R.id.rb_past_hour:
+                if (rbHour.isChecked()) {
+                    Constants.getInstance().setURL_PERIOD("hour");
                 }
                 break;
         }
