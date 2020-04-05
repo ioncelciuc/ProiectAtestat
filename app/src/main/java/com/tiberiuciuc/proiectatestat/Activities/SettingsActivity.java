@@ -1,6 +1,7 @@
 package com.tiberiuciuc.proiectatestat.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -48,6 +49,9 @@ public class SettingsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
+
+        Toolbar toolbar = findViewById(R.id.action_bar_settings);
+        setSupportActionBar(toolbar);
 
         radioGroup = findViewById(R.id.radio_group);
         rbNormal = findViewById(R.id.rb_normal);

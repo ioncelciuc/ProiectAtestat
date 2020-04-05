@@ -1,6 +1,7 @@
 package com.tiberiuciuc.proiectatestat.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -43,12 +44,17 @@ public class QuakesListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quakes_list);
 
+        Toolbar toolbar = findViewById(R.id.action_bar_quakes_list);
+        setSupportActionBar(toolbar);
+
         quakeList = new ArrayList<>();
         listView = findViewById(R.id.listView);
         queue = Volley.newRequestQueue(this);
         arrayList = new ArrayList<>();
 
         getAllQuakes(Constants.getInstance().getURL());
+
+        toolbar.setTitle("Total earthquakes: " + 1);
     }
 
     void getAllQuakes(String url) {
@@ -71,10 +77,10 @@ public class QuakesListActivity extends AppCompatActivity {
 
                                 //place json data in an object
                                 earthQuake.setPlace(properties.getString("place"));
-                                earthQuake.setType(properties.getString("type"));
-                                earthQuake.setTime(properties.getLong("time"));
                                 earthQuake.setMagnitude(properties.getDouble("mag"));
+                                earthQuake.setTime(properties.getLong("time"));
                                 earthQuake.setDetailLink(properties.getString("detail"));
+                                earthQuake.setType(properties.getString("type"));
                                 earthQuake.setLat(lat);
                                 earthQuake.setLon(lon);
 
@@ -83,6 +89,7 @@ public class QuakesListActivity extends AppCompatActivity {
                                 String formattedDate = dateFormat.format(new Date(earthQuake.getTime()).getTime());
 
                                 arrayList.add(earthQuake.getPlace());
+                                quakeList.add(earthQuake);
                             }
                             arrayAdapter = new ArrayAdapter<>(QuakesListActivity.this, android.R.layout.simple_list_item_1, arrayList);
                             listView.setAdapter(arrayAdapter);
@@ -90,6 +97,7 @@ public class QuakesListActivity extends AppCompatActivity {
                                 @Override
                                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                                     Toast.makeText(QuakesListActivity.this, "Clicked: " + i, Toast.LENGTH_SHORT).show();
+
                                 }
                             });
                             arrayAdapter.notifyDataSetChanged();
