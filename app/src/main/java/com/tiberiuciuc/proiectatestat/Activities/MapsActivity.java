@@ -1,23 +1,11 @@
 package com.tiberiuciuc.proiectatestat.Activities;
 
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 
-import android.Manifest;
 import android.app.AlertDialog;
-import android.app.Application;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.webkit.WebView;
@@ -32,7 +20,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.github.clans.fab.FloatingActionButton;
-import com.github.clans.fab.FloatingActionMenu;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -41,6 +28,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.tiberiuciuc.proiectatestat.Activities.DownloadStatus;
 import com.tiberiuciuc.proiectatestat.Model.EarthQuake;
 import com.tiberiuciuc.proiectatestat.R;
 import com.tiberiuciuc.proiectatestat.UI.CustomInfoWindow;
@@ -50,12 +38,16 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class MapsActivity extends FragmentActivity implements
         OnMapReadyCallback,
         GoogleMap.OnInfoWindowClickListener,
-        GoogleMap.OnMarkerClickListener {
+        GoogleMap.OnMarkerClickListener,
+        GetJsonData.OnDataAvailable {
+    private final static String TAG = "MapsActivity";
 
     private GoogleMap mMap;
     private RequestQueue queue;
@@ -64,6 +56,8 @@ public class MapsActivity extends FragmentActivity implements
 
     private FloatingActionButton fabShowList;
     private FloatingActionButton fabSettings;
+
+    private List<EarthQuake> quakeList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +77,8 @@ public class MapsActivity extends FragmentActivity implements
 
         //The rest of the app is now loading
 
+        quakeList = new ArrayList<EarthQuake>();
+
         fabShowList = findViewById(R.id.floating_action_show_list);
         fabSettings = findViewById(R.id.floating_action_settings);
 
@@ -101,7 +97,59 @@ public class MapsActivity extends FragmentActivity implements
 
         queue = Volley.newRequestQueue(this);
 
-        getEarthQuakes();
+        //getEarthQuakes();
+
+
+    }
+
+    @Override
+    protected void onResume() {
+        Log.d(TAG, "onResume: starts");
+        super.onResume();
+        GetJsonData getJsonData = new GetJsonData(this, Constants.getInstance().getURL());
+        getJsonData.execute("");
+        Log.d(TAG, "onResume: ends");
+    }
+
+    @Override
+    public void onDataAvailable(List<EarthQuake> data, DownloadStatus status) {
+        if (status == DownloadStatus.OK) {
+            showEarthQuakesOnMap(data);
+        } else {
+            //something failed...
+            Log.d(TAG, "onDataAvailable: failed with status: " + status.toString());
+        }
+    }
+
+    private void showEarthQuakesOnMap(List<EarthQuake> data) {
+        EarthQuake earthQuake = new EarthQuake();
+        for (int i = 0; i < data.size(); i++) {
+            earthQuake = (EarthQuake) data.get(i);
+            //format the date
+            java.text.DateFormat dateFormat = java.text.DateFormat.getDateInstance();
+            String formattedDate = dateFormat.format(new Date(earthQuake.getTime()).getTime());
+
+            //add object to map
+            MarkerOptions markerOptions = new MarkerOptions();
+            if (earthQuake.getMagnitude() <= 2)
+                markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+            else if (earthQuake.getMagnitude() <= 5)
+                markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
+            else if (earthQuake.getMagnitude() <= 8)
+                markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
+            else
+                markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+            markerOptions.title(earthQuake.getPlace());
+            markerOptions.position(new LatLng(earthQuake.getLat(), earthQuake.getLon()));
+            markerOptions.snippet(
+                    "Magnitude: " + earthQuake.getMagnitude() + "\n" +
+                            "Date: " + formattedDate
+            );
+
+            Marker marker = mMap.addMarker(markerOptions);
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(earthQuake.getLat(), earthQuake.getLon()), 1));
+            marker.setTag(earthQuake.getDetailLink());
+        }
     }
 
     private void getEarthQuakes() {
@@ -132,6 +180,8 @@ public class MapsActivity extends FragmentActivity implements
                                 earthQuake.setDetailLink(properties.getString("detail"));
                                 earthQuake.setLat(lat);
                                 earthQuake.setLon(lon);
+
+                                quakeList.add(earthQuake);
 
                                 //format the date
                                 java.text.DateFormat dateFormat = java.text.DateFormat.getDateInstance();
@@ -238,6 +288,7 @@ public class MapsActivity extends FragmentActivity implements
 
                         Button dismissButton = view.findViewById(R.id.dismissPop);
                         Button dismissButtonTop = view.findViewById(R.id.dismissPopTop);
+                        TextView popTitle = findViewById(R.id.popTitle);
                         TextView popList = view.findViewById(R.id.popList);
                         WebView htmlPop = view.findViewById(R.id.htmlWebView);
 
@@ -268,6 +319,9 @@ public class MapsActivity extends FragmentActivity implements
                                 );
                                 stringBuilder.append("\n\n");
                             }
+                            //if (earthQuake.getPlace() != null)
+                            //popTitle.setText(earthQuake.getPlace());
+
                             popList.setText(stringBuilder);
 
                             dismissButton.setOnClickListener(new View.OnClickListener() {

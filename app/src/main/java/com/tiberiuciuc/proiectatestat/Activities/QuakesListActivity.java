@@ -5,6 +5,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -54,7 +55,7 @@ public class QuakesListActivity extends AppCompatActivity {
 
         getAllQuakes(Constants.getInstance().getURL());
 
-        toolbar.setTitle("Total earthquakes: " + 1);
+        //toolbar.setTitle("Total earthquakes: " + 1);
     }
 
     void getAllQuakes(String url) {
@@ -97,7 +98,7 @@ public class QuakesListActivity extends AppCompatActivity {
                                 @Override
                                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                                     Toast.makeText(QuakesListActivity.this, "Clicked: " + i, Toast.LENGTH_SHORT).show();
-
+                                    //a way to view more details
                                 }
                             });
                             arrayAdapter.notifyDataSetChanged();
