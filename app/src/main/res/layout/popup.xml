@@ -18,55 +18,91 @@
                 android:layout_height="wrap_content"
                 android:padding="25dp">
 
+                <Button
+                    android:id="@+id/dismiss_pop_top"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:background="@android:drawable/ic_menu_close_clear_cancel" />
+
                 <TextView
-                    android:id="@+id/popTitle"
-                    android:padding="8dp"
+                    android:id="@+id/pop_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
+                    android:layout_below="@id/dismiss_pop_top"
+                    android:paddingTop="8dp"
+                    android:paddingEnd="8dp"
+                    android:paddingBottom="8dp"
                     android:text="More information"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
-                <Button
-                    android:id="@+id/dismissPopTop"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_below="@id/popTitle"
-                    android:layout_alignParentRight="true"
-                    android:background="@android:drawable/ic_menu_close_clear_cancel" />
-
                 <TextView
-                    android:id="@+id/popListTitle"
+                    android:id="@+id/pop_lat_lon"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/popTitle"
+                    android:layout_below="@id/pop_title"
+                    android:layout_marginTop="8dp"
+                    android:text="Coordinates: vrey ;arge number"
+                    android:textSize="17sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/pop_magnitude"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/pop_lat_lon"
+                    android:layout_marginTop="8dp"
+                    android:text="Magnitude: 3.14"
+                    android:textSize="17sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/pop_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/pop_magnitude"
+                    android:layout_marginTop="8dp"
+                    android:text="Date: 24.03.2020"
+                    android:textSize="17sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/pop_list_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/pop_date"
+                    android:layout_marginTop="8dp"
                     android:text="Surrounding cities"
-                    android:textSize="17sp" />
+                    android:textSize="17sp"
+                    android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/popList"
+                    android:id="@+id/pop_list"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/popListTitle"
+                    android:layout_below="@id/pop_list_title"
+                    android:layout_marginTop="8dp"
                     android:text="Hello"
                     android:textSize="15sp" />
 
                 <WebView
-                    android:id="@+id/htmlWebView"
+                    android:id="@+id/html_web_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/popList"
+                    android:layout_below="@id/pop_list"
                     tools:ignore="WebViewLayout">
 
                 </WebView>
 
                 <Button
-                    android:id="@+id/dismissPop"
+                    android:id="@+id/dismiss_pop"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/htmlWebView"
+                    android:layout_below="@id/html_web_view"
                     android:layout_centerHorizontal="true"
+                    android:layout_marginTop="8dp"
                     android:background="@color/colorAccent"
                     android:text="close"
                     android:textColor="@android:color/white"

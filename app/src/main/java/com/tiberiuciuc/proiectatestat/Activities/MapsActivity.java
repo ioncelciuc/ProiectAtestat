@@ -3,6 +3,8 @@ package com.tiberiuciuc.proiectatestat.Activities;
 import androidx.fragment.app.FragmentActivity;
 
 import android.app.AlertDialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -107,7 +109,7 @@ public class MapsActivity extends FragmentActivity implements
     public void onDataAvailable(List<EarthQuake> data, DownloadStatus status) {
         if (status == DownloadStatus.OK) {
             quakeList = data;
-            showEarthQuakesOnMap(quakeList);
+            if (quakeList != null) showEarthQuakesOnMap(quakeList);
         } else {
             //something failed...
             Log.d(TAG, "onDataAvailable: failed with status: " + status.toString());
@@ -145,79 +147,6 @@ public class MapsActivity extends FragmentActivity implements
         }
     }
 
-    private void getEarthQuakes() {
-
-        final EarthQuake earthQuake = new EarthQuake();
-
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
-                Request.Method.GET,
-                Constants.getInstance().getURL(),
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            JSONArray features = response.getJSONArray("features");
-                            for (int i = 0; i < features.length(); i++) {
-                                //get the json
-                                JSONObject properties = features.getJSONObject(i).getJSONObject("properties");
-                                JSONObject geometry = features.getJSONObject(i).getJSONObject("geometry");
-                                JSONArray coordinates = geometry.getJSONArray("coordinates");
-                                double lon = coordinates.getDouble(0);
-                                double lat = coordinates.getDouble(1);
-
-                                //place json data in an object
-                                earthQuake.setPlace(properties.getString("place"));
-                                earthQuake.setType(properties.getString("type"));
-                                earthQuake.setTime(properties.getLong("time"));
-                                earthQuake.setMagnitude(properties.getDouble("mag"));
-                                earthQuake.setDetailLink(properties.getString("detail"));
-                                earthQuake.setLat(lat);
-                                earthQuake.setLon(lon);
-
-                                quakeList.add(earthQuake);
-
-                                //format the date
-                                java.text.DateFormat dateFormat = java.text.DateFormat.getDateInstance();
-                                String formattedDate = dateFormat.format(new Date(earthQuake.getTime()).getTime());
-
-                                //add object to map
-                                MarkerOptions markerOptions = new MarkerOptions();
-                                if (earthQuake.getMagnitude() <= 2)
-                                    markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
-                                else if (earthQuake.getMagnitude() <= 5)
-                                    markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
-                                else if (earthQuake.getMagnitude() <= 8)
-                                    markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
-                                else
-                                    markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
-                                markerOptions.title(earthQuake.getPlace());
-                                markerOptions.position(new LatLng(lat, lon));
-                                markerOptions.snippet(
-                                        "Magnitude: " + earthQuake.getMagnitude() + "\n" +
-                                                "Date: " + formattedDate
-                                );
-
-                                Marker marker = mMap.addMarker(markerOptions);
-                                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lon), 1));
-                                marker.setTag(earthQuake.getDetailLink());
-
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-
-                    }
-                }
-        );
-
-        queue.add(jsonObjectRequest);
-    }
-
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -229,11 +158,12 @@ public class MapsActivity extends FragmentActivity implements
 
     @Override
     public void onInfoWindowClick(Marker marker) {
-        getQuakeDetails(marker.getTag().toString());
-
+        for (int i = 0; i < quakeList.size(); i++)
+            if (quakeList.get(i).getPlace().equals(marker.getTitle()))
+                getQuakeDetails(marker.getTag().toString(), quakeList.get(i));
     }
 
-    private void getQuakeDetails(String url) {
+    private void getQuakeDetails(String url, final EarthQuake earthQuake) {
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                 Request.Method.GET,
                 url,
@@ -253,7 +183,7 @@ public class MapsActivity extends FragmentActivity implements
                                 detailsUrl = geoJsonObj.getString("url");
                             }
                             Log.d("DETAILS_URL", detailsUrl);
-                            getMoreDetails(detailsUrl);
+                            getMoreDetails(detailsUrl, earthQuake);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -269,7 +199,7 @@ public class MapsActivity extends FragmentActivity implements
         queue.add(jsonObjectRequest);
     }
 
-    public void getMoreDetails(String url) {
+    public void getMoreDetails(String url, final EarthQuake earthQuake) {
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                 Request.Method.GET,
                 url,
@@ -279,11 +209,14 @@ public class MapsActivity extends FragmentActivity implements
                         dialogBuilder = new AlertDialog.Builder(MapsActivity.this);
                         View view = getLayoutInflater().inflate(R.layout.popup, null);
 
-                        Button dismissButton = view.findViewById(R.id.dismissPop);
-                        Button dismissButtonTop = view.findViewById(R.id.dismissPopTop);
-                        TextView popTitle = findViewById(R.id.popTitle);
-                        TextView popList = view.findViewById(R.id.popList);
-                        WebView htmlPop = view.findViewById(R.id.htmlWebView);
+                        Button dismissButton = view.findViewById(R.id.dismiss_pop);
+                        Button dismissButtonTop = view.findViewById(R.id.dismiss_pop_top);
+                        TextView popTitle = view.findViewById(R.id.pop_title);
+                        TextView popMagnitude = view.findViewById(R.id.pop_magnitude);
+                        TextView popDate = view.findViewById(R.id.pop_date);
+                        TextView popLatLon = view.findViewById(R.id.pop_lat_lon);
+                        TextView popList = view.findViewById(R.id.pop_list);
+                        WebView htmlPop = view.findViewById(R.id.html_web_view);
 
                         StringBuilder stringBuilder = new StringBuilder();
                         try {
@@ -312,10 +245,25 @@ public class MapsActivity extends FragmentActivity implements
                                 );
                                 stringBuilder.append("\n\n");
                             }
-                            //if (earthQuake.getPlace() != null)
-                            //popTitle.setText(earthQuake.getPlace());
 
+                            popTitle.setText(earthQuake.getPlace());
+                            String popLatLonText = "Coordinates: " + earthQuake.getLat() + ", " + earthQuake.getLon();
+                            popLatLon.setText(popLatLonText);
+                            String popMagText = "Magnitude: " + earthQuake.getMagnitude();
+                            popMagnitude.setText(popMagText);
+                            java.text.DateFormat dateFormat = java.text.DateFormat.getDateInstance();
+                            String formattedDate = "Date: " + dateFormat.format(new Date(earthQuake.getTime()).getTime());
+                            popDate.setText(formattedDate);
                             popList.setText(stringBuilder);
+
+                            popLatLon.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    ClipboardManager clipboardManager = (ClipboardManager)getSystemService(CLIPBOARD_SERVICE);
+                                    clipboardManager.setText(earthQuake.getLat() + ", " + earthQuake.getLon());
+                                    Toast.makeText(MapsActivity.this, "Coordinates copied!", Toast.LENGTH_SHORT).show();
+                                }
+                            });
 
                             dismissButton.setOnClickListener(new View.OnClickListener() {
                                 @Override

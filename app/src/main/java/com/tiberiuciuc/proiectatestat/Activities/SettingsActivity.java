@@ -97,12 +97,16 @@ public class SettingsActivity extends AppCompatActivity {
                 break;
             case "4.5":
                 rb4_5Plus.toggle();
+                break;
             case "2.5":
                 rb2_5Plus.toggle();
+                break;
             case "1.0":
                 rb1_0Plus.toggle();
+                break;
             case "all":
                 rbAll.toggle();
+                break;
         }
 
         switch (getSharedData.getString("URL_PERIOD", "month")) {
@@ -111,10 +115,13 @@ public class SettingsActivity extends AppCompatActivity {
                 break;
             case "week":
                 rbWeek.toggle();
+                break;
             case "day":
                 rbDay.toggle();
+                break;
             case "hour":
                 rbHour.toggle();
+                break;
         }
 
         applyChanges.setOnClickListener(new View.OnClickListener() {
