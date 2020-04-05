@@ -99,22 +99,15 @@ public class MapsActivity extends FragmentActivity implements
 
         //getEarthQuakes();
 
-
-    }
-
-    @Override
-    protected void onResume() {
-        Log.d(TAG, "onResume: starts");
-        super.onResume();
         GetJsonData getJsonData = new GetJsonData(this, Constants.getInstance().getURL());
-        getJsonData.execute("");
-        Log.d(TAG, "onResume: ends");
+        getJsonData.execute();
     }
 
     @Override
     public void onDataAvailable(List<EarthQuake> data, DownloadStatus status) {
         if (status == DownloadStatus.OK) {
-            showEarthQuakesOnMap(data);
+            quakeList = data;
+            showEarthQuakesOnMap(quakeList);
         } else {
             //something failed...
             Log.d(TAG, "onDataAvailable: failed with status: " + status.toString());
@@ -122,9 +115,9 @@ public class MapsActivity extends FragmentActivity implements
     }
 
     private void showEarthQuakesOnMap(List<EarthQuake> data) {
-        EarthQuake earthQuake = new EarthQuake();
+        EarthQuake earthQuake;
         for (int i = 0; i < data.size(); i++) {
-            earthQuake = (EarthQuake) data.get(i);
+            earthQuake = data.get(i);
             //format the date
             java.text.DateFormat dateFormat = java.text.DateFormat.getDateInstance();
             String formattedDate = dateFormat.format(new Date(earthQuake.getTime()).getTime());
