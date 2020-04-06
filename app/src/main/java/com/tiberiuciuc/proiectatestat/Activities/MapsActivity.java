@@ -82,10 +82,10 @@ public class MapsActivity extends FragmentActivity implements
         fabShowList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Gson gson = new Gson();
-                String jsonQuakeList = gson.toJson(quakeList);
+                //Gson gson = new Gson();
+                //String jsonQuakeList = gson.toJson(quakeList);
                 Intent intent = new Intent(MapsActivity.this, QuakesListActivity.class);
-                intent.putExtra("EARTHQUAKE_LIST", jsonQuakeList);
+                //intent.putExtra("EARTHQUAKE_LIST", jsonQuakeList);
                 startActivity(intent);
             }
         });
