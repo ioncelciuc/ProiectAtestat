@@ -20,7 +20,6 @@ public class GetJsonData extends AsyncTask<String, Void, List<EarthQuake>> imple
     private String URL = null;
 
     private OnDataAvailable callback;
-    private boolean runningOnSameThread = false;
 
     public interface OnDataAvailable {
         void onDataAvailable(List<EarthQuake> data, DownloadStatus status);
@@ -83,12 +82,6 @@ public class GetJsonData extends AsyncTask<String, Void, List<EarthQuake>> imple
                 Log.e(TAG, "onDownloadComplete: error processing json data: " + e.getMessage());
                 downloadStatus = DownloadStatus.FAILED_OR_EMPTY;
             }
-        }
-
-        if (runningOnSameThread && callback != null) {
-            //now inform that the processing is done
-            //return null if there was an error
-            callback.onDataAvailable(quakeList, downloadStatus);
         }
 
         Log.d(TAG, "onDownloadComplete: ends");

@@ -17,7 +17,6 @@ public class GetJsonDetailLink extends AsyncTask<String, Void, String> implement
     private String URL = null;
 
     OnDetailLinkAvailable callback;
-    private boolean runningOnSameThread = false;
     EarthQuake earthQuake;
 
     public interface OnDetailLinkAvailable {
@@ -71,10 +70,6 @@ public class GetJsonDetailLink extends AsyncTask<String, Void, String> implement
                 Log.e(TAG, "onDownloadComplete: error processing json data: " + e.getMessage());
                 downloadStatus = DownloadStatus.FAILED_OR_EMPTY;
             }
-        }
-
-        if(runningOnSameThread && callback!=null){
-            callback.onDetailLinkAvailable(link, downloadStatus, earthQuake);
         }
 
         Log.d(TAG, "onDownloadComplete: ends");

@@ -19,7 +19,6 @@ public class GetMoreDetails extends AsyncTask<String, Void, EarthquakeDetails> i
     private EarthQuake earthquake;
 
     private OnMoreDetailsAvailable callback;
-    private boolean runningOnSameThread = false;
 
     public interface OnMoreDetailsAvailable{
         void onMoreDetailsAvailable(EarthquakeDetails earthquakeDetails, DownloadStatus status, EarthQuake earthQuake);
@@ -85,10 +84,6 @@ public class GetMoreDetails extends AsyncTask<String, Void, EarthquakeDetails> i
                 earthquakeDetails.setBuilder(stringBuilder);
                 earthquakeDetails.setHtmlText(text);
             }
-        }
-
-        if(runningOnSameThread && callback!=null){
-            callback.onMoreDetailsAvailable(earthquakeDetails, downloadStatus, earthquake);
         }
 
         Log.d(TAG, "onDownloadComplete: ends");
