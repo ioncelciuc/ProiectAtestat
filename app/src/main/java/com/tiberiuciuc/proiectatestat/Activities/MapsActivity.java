@@ -160,13 +160,14 @@ public class MapsActivity extends FragmentActivity implements
     @Override
     public void onInfoWindowClick(Marker marker) {
         for (int i = 0; i < quakeList.size(); i++)
-            if (quakeList.get(i).getPlace().equals(marker.getTitle()))
-                getQuakeDetails(marker.getTag().toString(), quakeList.get(i));
-    }
-
-    private void getQuakeDetails(String url, EarthQuake earthQuake) {
-        GetJsonDetailLink getJsonDetailLink = new GetJsonDetailLink(this, url, earthQuake);
-        getJsonDetailLink.execute();
+            if (quakeList.get(i).getPlace().equals(marker.getTitle())) {
+                GetJsonDetailLink getJsonDetailLink = new GetJsonDetailLink(
+                        this,
+                        marker.getTag().toString(),
+                        quakeList.get(i)
+                );
+                getJsonDetailLink.execute();
+            }
     }
 
     @Override
