@@ -1,7 +1,10 @@
-package com.tiberiuciuc.proiectatestat.Activities;
+package com.tiberiuciuc.proiectatestat.Data;
 
 import android.os.AsyncTask;
 import android.util.Log;
+
+
+import com.tiberiuciuc.proiectatestat.Util.DownloadStatus;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -9,8 +12,6 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-
-enum DownloadStatus {IDLE, PROCESSING, NOT_INITIALISED, FAILED_OR_EMPTY, OK}
 
 public class GetRawData extends AsyncTask<String, Void, String> {
     private static final String TAG = "GetRawData";

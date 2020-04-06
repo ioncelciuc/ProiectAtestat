@@ -127,7 +127,6 @@ public class SettingsActivity extends AppCompatActivity {
         applyChanges.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Constants.getInstance().setURL();
 
                 SharedPreferences sharedPreferences = getSharedPreferences(Constants.SETTINGS, MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();

@@ -1,11 +1,10 @@
-package com.tiberiuciuc.proiectatestat.Activities;
+package com.tiberiuciuc.proiectatestat.Data;
 
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 
 import com.tiberiuciuc.proiectatestat.Model.EarthQuake;
-import com.tiberiuciuc.proiectatestat.Util.Constants;
+import com.tiberiuciuc.proiectatestat.Util.DownloadStatus;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -23,7 +22,7 @@ public class GetJsonData extends AsyncTask<String, Void, List<EarthQuake>> imple
     private OnDataAvailable callback;
     private boolean runningOnSameThread = false;
 
-    interface OnDataAvailable {
+    public interface OnDataAvailable {
         void onDataAvailable(List<EarthQuake> data, DownloadStatus status);
     }
 

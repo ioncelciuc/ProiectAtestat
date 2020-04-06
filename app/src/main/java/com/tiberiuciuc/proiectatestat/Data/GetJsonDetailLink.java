@@ -1,16 +1,14 @@
-package com.tiberiuciuc.proiectatestat.Activities;
+package com.tiberiuciuc.proiectatestat.Data;
 
 import android.os.AsyncTask;
 import android.util.Log;
 
 import com.tiberiuciuc.proiectatestat.Model.EarthQuake;
+import com.tiberiuciuc.proiectatestat.Util.DownloadStatus;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.net.URL;
-import java.security.PrivateKey;
 
 public class GetJsonDetailLink extends AsyncTask<String, Void, String> implements GetRawData.OnDownloadComplete {
     private static final String TAG = "GetJsonDetailLink";
@@ -22,7 +20,7 @@ public class GetJsonDetailLink extends AsyncTask<String, Void, String> implement
     private boolean runningOnSameThread = false;
     EarthQuake earthQuake;
 
-    interface OnDetailLinkAvailable {
+    public interface OnDetailLinkAvailable {
         void onDetailLinkAvailable(String detailLink, DownloadStatus status, EarthQuake earthQuake);
     }
 

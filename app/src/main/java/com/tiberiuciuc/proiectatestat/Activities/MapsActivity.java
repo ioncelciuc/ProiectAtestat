@@ -3,7 +3,6 @@ package com.tiberiuciuc.proiectatestat.Activities;
 import androidx.fragment.app.FragmentActivity;
 
 import android.app.AlertDialog;
-import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -15,12 +14,6 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
 import com.github.clans.fab.FloatingActionButton;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -30,15 +23,15 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.tiberiuciuc.proiectatestat.Activities.DownloadStatus;
+import com.tiberiuciuc.proiectatestat.Data.GetJsonData;
+import com.tiberiuciuc.proiectatestat.Data.GetJsonDetailLink;
+import com.tiberiuciuc.proiectatestat.Data.GetMoreDetails;
 import com.tiberiuciuc.proiectatestat.Model.EarthQuake;
+import com.tiberiuciuc.proiectatestat.Model.EarthquakeDetails;
 import com.tiberiuciuc.proiectatestat.R;
 import com.tiberiuciuc.proiectatestat.UI.CustomInfoWindow;
 import com.tiberiuciuc.proiectatestat.Util.Constants;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.tiberiuciuc.proiectatestat.Util.DownloadStatus;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -49,11 +42,11 @@ public class MapsActivity extends FragmentActivity implements
         GoogleMap.OnInfoWindowClickListener,
         GoogleMap.OnMarkerClickListener,
         GetJsonData.OnDataAvailable,
-        GetJsonDetailLink.OnDetailLinkAvailable{
+        GetJsonDetailLink.OnDetailLinkAvailable,
+        GetMoreDetails.OnMoreDetailsAvailable {
     private final static String TAG = "MapsActivity";
 
     private GoogleMap mMap;
-    private RequestQueue queue;
     private AlertDialog.Builder dialogBuilder;
     private AlertDialog dialog;
 
@@ -98,12 +91,19 @@ public class MapsActivity extends FragmentActivity implements
             }
         });
 
-        queue = Volley.newRequestQueue(this);
-
         //getEarthQuakes();
 
         GetJsonData getJsonData = new GetJsonData(this, Constants.getInstance().getURL());
         getJsonData.execute();
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+        mMap.setMapType(Constants.getInstance().getMAP_TYPE());
+        mMap.setInfoWindowAdapter(new CustomInfoWindow(getApplicationContext()));
+        mMap.setOnInfoWindowClickListener(this);
+        mMap.setOnMarkerClickListener(this);
     }
 
     @Override
@@ -149,130 +149,109 @@ public class MapsActivity extends FragmentActivity implements
     }
 
     @Override
-    public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
-        mMap.setMapType(Constants.getInstance().getMAP_TYPE());
-        mMap.setInfoWindowAdapter(new CustomInfoWindow(getApplicationContext()));
-        mMap.setOnInfoWindowClickListener(this);
-        mMap.setOnMarkerClickListener(this);
-    }
-
-    @Override
     public void onInfoWindowClick(Marker marker) {
-        for (int i = 0; i < quakeList.size(); i++)
-            if (quakeList.get(i).getPlace().equals(marker.getTitle())) {
+        boolean foundEarthquake = false;
+        for (int i = 0; i < quakeList.size() && !foundEarthquake; i++) {
+            LatLng latLng = new LatLng(quakeList.get(i).getLat(), quakeList.get(i).getLon());
+            if (latLng.equals(marker.getPosition())) {
                 GetJsonDetailLink getJsonDetailLink = new GetJsonDetailLink(
                         this,
                         marker.getTag().toString(),
                         quakeList.get(i)
                 );
                 getJsonDetailLink.execute();
+                foundEarthquake = true;
             }
+        }
     }
 
     @Override
     public void onDetailLinkAvailable(String detailLink, DownloadStatus status, EarthQuake earthQuake) {
-        if (status == DownloadStatus.OK && detailLink!=null){
+        if (status == DownloadStatus.OK && detailLink != null) {
             getMoreDetails(detailLink, earthQuake);
         }
     }
 
-    public void getMoreDetails(String url, final EarthQuake earthQuake) {
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
-                Request.Method.GET,
+    public void getMoreDetails(String url, EarthQuake earthQuake) {
+        GetMoreDetails getMoreDetails = new GetMoreDetails(
+                this,
                 url,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        dialogBuilder = new AlertDialog.Builder(MapsActivity.this);
-                        View view = getLayoutInflater().inflate(R.layout.popup, null);
-
-                        Button dismissButton = view.findViewById(R.id.dismiss_pop);
-                        Button dismissButtonTop = view.findViewById(R.id.dismiss_pop_top);
-                        TextView popTitle = view.findViewById(R.id.pop_title);
-                        TextView popMagnitude = view.findViewById(R.id.pop_magnitude);
-                        TextView popDate = view.findViewById(R.id.pop_date);
-                        TextView popLatLon = view.findViewById(R.id.pop_lat_lon);
-                        TextView popList = view.findViewById(R.id.pop_list);
-                        WebView htmlPop = view.findViewById(R.id.html_web_view);
-
-                        StringBuilder stringBuilder = new StringBuilder();
-                        try {
-                            if (response.has("tectonicSummary") && response.getString("tectonicSummary") != null) {
-                                JSONObject tectonic = response.getJSONObject("tectonicSummary");
-                                if (tectonic.has("text") && tectonic.getString("text") != null) {
-                                    String text = tectonic.getString("text");
-                                    htmlPop.loadDataWithBaseURL(
-                                            null,
-                                            text, //String data
-                                            "text/html",
-                                            "UTF-8",
-                                            null
-                                    );
-                                }
-                            }
-                            JSONArray cities = response.getJSONArray("cities");
-                            for (int i = 0; i < cities.length(); i++) {
-                                JSONObject citiesObj = cities.getJSONObject(i);
-                                stringBuilder.append("City: " +
-                                        citiesObj.getString("name") + "\n" +
-                                        "Distance: " +
-                                        citiesObj.getString("distance") + " KM\n" +
-                                        "Population: " +
-                                        citiesObj.getString("population")
-                                );
-                                stringBuilder.append("\n\n");
-                            }
-
-                            popTitle.setText(earthQuake.getPlace());
-                            String popLatLonText = "Coordinates: " + earthQuake.getLat() + ", " + earthQuake.getLon();
-                            popLatLon.setText(popLatLonText);
-                            String popMagText = "Magnitude: " + earthQuake.getMagnitude();
-                            popMagnitude.setText(popMagText);
-                            java.text.DateFormat dateFormat = java.text.DateFormat.getDateInstance();
-                            String formattedDate = "Date: " + dateFormat.format(new Date(earthQuake.getTime()).getTime());
-                            popDate.setText(formattedDate);
-                            popList.setText(stringBuilder);
-
-                            popLatLon.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    ClipboardManager clipboardManager = (ClipboardManager)getSystemService(CLIPBOARD_SERVICE);
-                                    clipboardManager.setText(earthQuake.getLat() + ", " + earthQuake.getLon());
-                                    Toast.makeText(MapsActivity.this, "Coordinates copied!", Toast.LENGTH_SHORT).show();
-                                }
-                            });
-
-                            dismissButton.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    dialog.dismiss();
-                                }
-                            });
-                            dismissButtonTop.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    dialog.dismiss();
-                                }
-                            });
-
-
-                            dialogBuilder.setView(view);
-                            dialog = dialogBuilder.create();
-                            dialog.show();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-
-                    }
-                }
+                earthQuake
         );
-        queue.add(jsonObjectRequest);
+        getMoreDetails.execute();
+    }
+
+    @Override
+    public void onMoreDetailsAvailable(EarthquakeDetails earthquakeDetails, DownloadStatus status, EarthQuake earthQuake) {
+        Log.d(TAG, "onMoreDetailsAvailable: starts");
+        if (status == DownloadStatus.OK && earthquakeDetails != null) {
+            buildDialog(earthquakeDetails, earthQuake);
+        } else {
+            Log.d(TAG, "onMoreDetailsAvailable: failed with status: " + status);
+        }
+        Log.d(TAG, "onMoreDetailsAvailable: ends");
+    }
+
+    private void buildDialog(EarthquakeDetails earthquakeDetails, final EarthQuake earthQuake) {
+        Log.d(TAG, "buildDialog: starts");
+        dialogBuilder = new AlertDialog.Builder(MapsActivity.this);
+        View view = getLayoutInflater().inflate(R.layout.popup, null);
+
+        Button dismissButton = view.findViewById(R.id.dismiss_pop);
+        Button dismissButtonTop = view.findViewById(R.id.dismiss_pop_top);
+        TextView popTitle = view.findViewById(R.id.pop_title);
+        TextView popMagnitude = view.findViewById(R.id.pop_magnitude);
+        TextView popDate = view.findViewById(R.id.pop_date);
+        TextView popLatLon = view.findViewById(R.id.pop_lat_lon);
+        TextView popList = view.findViewById(R.id.pop_list);
+        WebView htmlPop = view.findViewById(R.id.html_web_view);
+
+        if (!earthquakeDetails.getHtmlText().equals("")) {
+            htmlPop.loadDataWithBaseURL(
+                    null,
+                    earthquakeDetails.getHtmlText(), //String data
+                    "text/html",
+                    "UTF-8",
+                    null
+            );
+        }
+
+        popTitle.setText(earthQuake.getPlace());
+        String popLatLonText = "Coordinates: " + earthQuake.getLat() + ", " + earthQuake.getLon();
+        popLatLon.setText(popLatLonText);
+        String popMagText = "Magnitude: " + earthQuake.getMagnitude();
+        popMagnitude.setText(popMagText);
+        java.text.DateFormat dateFormat = java.text.DateFormat.getDateInstance();
+        String formattedDate = "Date: " + dateFormat.format(new Date(earthQuake.getTime()).getTime());
+        popDate.setText(formattedDate);
+        popList.setText(earthquakeDetails.getBuilder());
+
+        popLatLon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ClipboardManager clipboardManager = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+                clipboardManager.setText(earthQuake.getLat() + ", " + earthQuake.getLon());
+                Toast.makeText(MapsActivity.this, "Coordinates copied!", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        dismissButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+        dismissButtonTop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+
+
+        dialogBuilder.setView(view);
+        dialog = dialogBuilder.create();
+        dialog.show();
     }
 
     @Override
