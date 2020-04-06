@@ -48,7 +48,8 @@ public class MapsActivity extends FragmentActivity implements
         OnMapReadyCallback,
         GoogleMap.OnInfoWindowClickListener,
         GoogleMap.OnMarkerClickListener,
-        GetJsonData.OnDataAvailable {
+        GetJsonData.OnDataAvailable,
+        GetJsonDetailLink.OnDetailLinkAvailable{
     private final static String TAG = "MapsActivity";
 
     private GoogleMap mMap;
@@ -163,40 +164,16 @@ public class MapsActivity extends FragmentActivity implements
                 getQuakeDetails(marker.getTag().toString(), quakeList.get(i));
     }
 
-    private void getQuakeDetails(String url, final EarthQuake earthQuake) {
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
-                Request.Method.GET,
-                url,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        String detailsUrl = "";
-                        try {
-                            JSONObject properties = response.getJSONObject("properties");
-                            JSONObject products = properties.getJSONObject("products");
-                            JSONArray geoserve = products.getJSONArray("geoserve");
-                            for (int i = 0; i < geoserve.length(); i++) {
-                                JSONObject geoserveObj = geoserve.getJSONObject(i);
-                                JSONObject contentObj = geoserveObj.getJSONObject("contents");
-                                JSONObject geoJsonObj = contentObj.getJSONObject("geoserve.json");
+    private void getQuakeDetails(String url, EarthQuake earthQuake) {
+        GetJsonDetailLink getJsonDetailLink = new GetJsonDetailLink(this, url, earthQuake);
+        getJsonDetailLink.execute();
+    }
 
-                                detailsUrl = geoJsonObj.getString("url");
-                            }
-                            Log.d("DETAILS_URL", detailsUrl);
-                            getMoreDetails(detailsUrl, earthQuake);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-
-                    }
-                }
-        );
-        queue.add(jsonObjectRequest);
+    @Override
+    public void onDetailLinkAvailable(String detailLink, DownloadStatus status, EarthQuake earthQuake) {
+        if (status == DownloadStatus.OK && detailLink!=null){
+            getMoreDetails(detailLink, earthQuake);
+        }
     }
 
     public void getMoreDetails(String url, final EarthQuake earthQuake) {

@@ -46,10 +46,8 @@ public class GetJsonData extends AsyncTask<String, Void, List<EarthQuake>> imple
     @Override
     protected List<EarthQuake> doInBackground(String... strings) {
         Log.d(TAG, "doInBackground: starts");
-        String destinationUri = URL;
-
         GetRawData getRawData = new GetRawData(this);
-        getRawData.runInSameThread(destinationUri);
+        getRawData.runInSameThread(URL);
         Log.d(TAG, "doInBackground: ends");
         return quakeList;
     }
