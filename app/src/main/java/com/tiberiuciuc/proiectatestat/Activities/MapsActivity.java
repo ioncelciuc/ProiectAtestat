@@ -27,6 +27,7 @@ import com.google.gson.Gson;
 import com.tiberiuciuc.proiectatestat.Data.GetJsonData;
 import com.tiberiuciuc.proiectatestat.Data.GetJsonDetailLink;
 import com.tiberiuciuc.proiectatestat.Data.GetMoreDetails;
+import com.tiberiuciuc.proiectatestat.Data.TransformQuakeListInJson;
 import com.tiberiuciuc.proiectatestat.Model.EarthQuake;
 import com.tiberiuciuc.proiectatestat.Model.EarthquakeDetails;
 import com.tiberiuciuc.proiectatestat.R;
@@ -44,7 +45,8 @@ public class MapsActivity extends FragmentActivity implements
         GoogleMap.OnMarkerClickListener,
         GetJsonData.OnDataAvailable,
         GetJsonDetailLink.OnDetailLinkAvailable,
-        GetMoreDetails.OnMoreDetailsAvailable {
+        GetMoreDetails.OnMoreDetailsAvailable,
+        TransformQuakeListInJson.OnJsonAvailable {
     private final static String TAG = "MapsActivity";
 
     private GoogleMap mMap;
@@ -82,11 +84,7 @@ public class MapsActivity extends FragmentActivity implements
         fabShowList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Gson gson = new Gson();
-                //String jsonQuakeList = gson.toJson(quakeList);
-                Intent intent = new Intent(MapsActivity.this, QuakesListActivity.class);
-                //intent.putExtra("EARTHQUAKE_LIST", jsonQuakeList);
-                startActivity(intent);
+                transformQuakeListInJson();
             }
         });
         fabSettings.setOnClickListener(new View.OnClickListener() {
@@ -97,7 +95,6 @@ public class MapsActivity extends FragmentActivity implements
         });
 
         //getEarthQuakes();
-
         GetJsonData getJsonData = new GetJsonData(this, Constants.getInstance().getURL());
         getJsonData.execute();
     }
@@ -257,6 +254,18 @@ public class MapsActivity extends FragmentActivity implements
         dialogBuilder.setView(view);
         dialog = dialogBuilder.create();
         dialog.show();
+    }
+
+    private void transformQuakeListInJson(){
+        TransformQuakeListInJson quakeListInJson = new TransformQuakeListInJson(this, quakeList);
+        quakeListInJson.execute();
+    }
+
+    @Override
+    public void onJsonAvailable(String data) {
+        Intent intent = new Intent(MapsActivity.this, QuakesListActivity.class);
+        intent.putExtra("EARTHQUAKE_LIST", data);
+        startActivity(intent);
     }
 
     @Override

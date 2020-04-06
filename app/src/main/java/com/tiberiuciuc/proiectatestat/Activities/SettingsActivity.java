@@ -94,33 +94,73 @@ public class SettingsActivity extends AppCompatActivity {
         switch (getSharedData.getString("URL_TYPE", "significant")) {
             case "significant":
                 rbSignificant.toggle();
+                rbMonth.setEnabled(true);
+                rbWeek.setEnabled(true);
+                rbDay.setEnabled(true);
+                rbHour.setEnabled(true);
                 break;
             case "4.5":
                 rb4_5Plus.toggle();
+                rbMonth.setEnabled(true);
+                rbWeek.setEnabled(true);
+                rbDay.setEnabled(true);
+                rbHour.setEnabled(true);
                 break;
             case "2.5":
                 rb2_5Plus.toggle();
+                rbMonth.setEnabled(false);
+                rbWeek.setEnabled(true);
+                rbDay.setEnabled(true);
+                rbHour.setEnabled(true);
                 break;
             case "1.0":
                 rb1_0Plus.toggle();
+                rbMonth.setEnabled(false);
+                rbWeek.setEnabled(false);
+                rbDay.setEnabled(true);
+                rbHour.setEnabled(true);
                 break;
             case "all":
                 rbAll.toggle();
+                rbMonth.setEnabled(false);
+                rbWeek.setEnabled(false);
+                rbDay.setEnabled(true);
+                rbHour.setEnabled(true);
                 break;
         }
 
         switch (getSharedData.getString("URL_PERIOD", "month")) {
             case "month":
                 rbMonth.toggle();
+                rbSignificant.setEnabled(true);
+                rb4_5Plus.setEnabled(true);
+                rb2_5Plus.setEnabled(false);
+                rb1_0Plus.setEnabled(false);
+                rbAll.setEnabled(false);
                 break;
             case "week":
                 rbWeek.toggle();
+                rbSignificant.setEnabled(true);
+                rb4_5Plus.setEnabled(true);
+                rb2_5Plus.setEnabled(true);
+                rb1_0Plus.setEnabled(false);
+                rbAll.setEnabled(false);
                 break;
             case "day":
                 rbDay.toggle();
+                rbSignificant.setEnabled(true);
+                rb4_5Plus.setEnabled(true);
+                rb2_5Plus.setEnabled(true);
+                rb1_0Plus.setEnabled(true);
+                rbAll.setEnabled(true);
                 break;
             case "hour":
                 rbHour.toggle();
+                rbSignificant.setEnabled(true);
+                rb4_5Plus.setEnabled(true);
+                rb2_5Plus.setEnabled(true);
+                rb1_0Plus.setEnabled(true);
+                rbAll.setEnabled(true);
                 break;
         }
 
@@ -182,26 +222,46 @@ public class SettingsActivity extends AppCompatActivity {
             case R.id.rb_significant:
                 if (rbSignificant.isChecked()) {
                     Constants.getInstance().setURL_TYPE("significant");
+                    rbMonth.setEnabled(true);
+                    rbWeek.setEnabled(true);
+                    rbDay.setEnabled(true);
+                    rbHour.setEnabled(true);
                 }
                 break;
             case R.id.rb_M4_5PLUS:
                 if (rb4_5Plus.isChecked()) {
                     Constants.getInstance().setURL_TYPE("4.5");
+                    rbMonth.setEnabled(true);
+                    rbWeek.setEnabled(true);
+                    rbDay.setEnabled(true);
+                    rbHour.setEnabled(true);
                 }
                 break;
             case R.id.rb_M2_5PLUS:
                 if (rb2_5Plus.isChecked()) {
                     Constants.getInstance().setURL_TYPE("2.5");
+                    rbMonth.setEnabled(false);
+                    rbWeek.setEnabled(true);
+                    rbDay.setEnabled(true);
+                    rbHour.setEnabled(true);
                 }
                 break;
             case R.id.rb_M1_0PLUS:
                 if (rb1_0Plus.isChecked()) {
                     Constants.getInstance().setURL_TYPE("1.0");
+                    rbMonth.setEnabled(false);
+                    rbWeek.setEnabled(false);
+                    rbDay.setEnabled(true);
+                    rbHour.setEnabled(true);
                 }
                 break;
             case R.id.rb_all_earthquakes:
                 if (rbAll.isChecked()) {
                     Constants.getInstance().setURL_TYPE("all");
+                    rbMonth.setEnabled(false);
+                    rbWeek.setEnabled(false);
+                    rbDay.setEnabled(true);
+                    rbHour.setEnabled(true);
                 }
                 break;
         }
@@ -212,21 +272,41 @@ public class SettingsActivity extends AppCompatActivity {
             case R.id.rb_past_month:
                 if (rbMonth.isChecked()) {
                     Constants.getInstance().setURL_PERIOD("month");
+                    rbSignificant.setEnabled(true);
+                    rb4_5Plus.setEnabled(true);
+                    rb2_5Plus.setEnabled(false);
+                    rb1_0Plus.setEnabled(false);
+                    rbAll.setEnabled(false);
                 }
                 break;
             case R.id.rb_past_week:
                 if (rbWeek.isChecked()) {
                     Constants.getInstance().setURL_PERIOD("week");
+                    rbSignificant.setEnabled(true);
+                    rb4_5Plus.setEnabled(true);
+                    rb2_5Plus.setEnabled(true);
+                    rb1_0Plus.setEnabled(false);
+                    rbAll.setEnabled(false);
                 }
                 break;
             case R.id.rb_past_day:
                 if (rbDay.isChecked()) {
                     Constants.getInstance().setURL_PERIOD("day");
+                    rbSignificant.setEnabled(true);
+                    rb4_5Plus.setEnabled(true);
+                    rb2_5Plus.setEnabled(true);
+                    rb1_0Plus.setEnabled(true);
+                    rbAll.setEnabled(true);
                 }
                 break;
             case R.id.rb_past_hour:
                 if (rbHour.isChecked()) {
                     Constants.getInstance().setURL_PERIOD("hour");
+                    rbSignificant.setEnabled(true);
+                    rb4_5Plus.setEnabled(true);
+                    rb2_5Plus.setEnabled(true);
+                    rb1_0Plus.setEnabled(true);
+                    rbAll.setEnabled(true);
                 }
                 break;
         }

@@ -6,13 +6,14 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.tiberiuciuc.proiectatestat.Model.EarthQuake;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TransformQuakeListInJson extends AsyncTask<List<EarthQuake>, Void, String> {
     private static final String TAG = "TransformQuakeListInJson";
 
-    private String data;
-    private List<EarthQuake> quakeList;
+    private String data = null;
+    private List<EarthQuake> quakeList = null;
 
     private OnJsonAvailable callback;
 
