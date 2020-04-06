@@ -23,6 +23,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.gson.Gson;
 import com.tiberiuciuc.proiectatestat.Data.GetJsonData;
 import com.tiberiuciuc.proiectatestat.Data.GetJsonDetailLink;
 import com.tiberiuciuc.proiectatestat.Data.GetMoreDetails;
@@ -81,7 +82,11 @@ public class MapsActivity extends FragmentActivity implements
         fabShowList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(MapsActivity.this, QuakesListActivity.class));
+                Gson gson = new Gson();
+                String jsonQuakeList = gson.toJson(quakeList);
+                Intent intent = new Intent(MapsActivity.this, QuakesListActivity.class);
+                intent.putExtra("EARTHQUAKE_LIST", jsonQuakeList);
+                startActivity(intent);
             }
         });
         fabSettings.setOnClickListener(new View.OnClickListener() {
