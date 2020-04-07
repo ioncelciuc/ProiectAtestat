@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="8dp">
+
+    <TextView
+        android:id="@+id/earthquake_magnitude"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="3.14"
+        android:layout_margin="8dp"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="8dp">
+
+        <TextView
+            android:id="@+id/earthquake_place"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="8 KM SSW of a city" />
+
+        <TextView
+            android:id="@+id/earthquake_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="24 Mar, 2020" />
+
+    </LinearLayout>
+</LinearLayout>

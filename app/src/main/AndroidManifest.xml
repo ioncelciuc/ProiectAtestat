@@ -17,7 +17,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".Activities.SettingsActivity"></activity>
+        <activity android:name=".Activities.EarthquakeDetailActivity"></activity>
+        <activity android:name=".Activities.SettingsActivity" />
         <activity android:name=".Activities.QuakesListActivity" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.

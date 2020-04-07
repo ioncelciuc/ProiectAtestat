@@ -15,10 +15,11 @@
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:title="Earthquake List" />
 
-    <ListView
-        android:id="@+id/listView"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/action_bar_quakes_list"
-        android:layout_margin="8dp" />
+        android:layout_margin="8dp"
+        android:scrollbars="vertical" />
 </RelativeLayout>
