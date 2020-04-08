@@ -83,9 +83,19 @@ public class QuakesListActivity extends AppCompatActivity implements
 
     @Override
     public void onItemClick(View view, int position) {
-        Toast.makeText(this, "Clicked: " + position, Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(this, EarthquakeDetailActivity.class);
-        //earthquakeToJson
+        EarthQuake eq = quakeList.get(position);
+        intent.putExtra("EQ_PLACE", eq.getPlace());
+        String mag = String.valueOf(eq.getMagnitude());
+        intent.putExtra("EQ_MAG", mag);
+        String time = String.valueOf(eq.getTime());
+        intent.putExtra("EQ_TIME", time);
+        intent.putExtra("EQ_LINK", eq.getDetailLink());
+        intent.putExtra("EQ_TYPE", eq.getType());
+        String lat = String.valueOf(eq.getLat());
+        intent.putExtra("EQ_LAT", lat);
+        String lon = String.valueOf(eq.getLon());
+        intent.putExtra("EQ_LON", lon);
         startActivity(intent);
     }
 }
