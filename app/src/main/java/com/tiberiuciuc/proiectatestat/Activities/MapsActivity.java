@@ -55,6 +55,7 @@ public class MapsActivity extends FragmentActivity implements
 
     private FloatingActionButton fabShowList;
     private FloatingActionButton fabSettings;
+    private FloatingActionButton fabRefresh;
 
     private List<EarthQuake> quakeList;
 
@@ -78,9 +79,16 @@ public class MapsActivity extends FragmentActivity implements
 
         quakeList = new ArrayList<EarthQuake>();
 
+        fabRefresh = findViewById(R.id.floating_action_refresh);
         fabShowList = findViewById(R.id.floating_action_show_list);
         fabSettings = findViewById(R.id.floating_action_settings);
 
+        fabRefresh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MapsActivity.this, MapsActivity.class));
+            }
+        });
         fabShowList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
