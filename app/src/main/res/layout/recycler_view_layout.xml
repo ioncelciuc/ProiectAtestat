@@ -2,55 +2,58 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginTop="4dp"
+    android:layout_marginStart="4dp"
+    android:layout_marginEnd="4dp"
+    android:background="@android:color/white"
     android:orientation="horizontal"
-    android:padding="8dp"
-    android:background="@color/colorPrimary"
-    android:layout_margin="4dp">
+    android:padding="8dp">
 
     <RelativeLayout
-        android:layout_centerVertical="true"
         android:id="@+id/magnitude_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/shape_circle">
+        android:layout_centerVertical="true"
+        android:background="@drawable/shape_circle"
+        android:elevation="4dp">
 
         <TextView
             android:id="@+id/earthquake_magnitude"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
             android:layout_margin="8dp"
             android:text="-3.4"
             android:textColor="@android:color/black"
-            android:layout_centerInParent="true"
             android:textSize="20sp" />
 
     </RelativeLayout>
 
     <LinearLayout
-        android:layout_centerVertical="true"
-        android:layout_toEndOf="@id/magnitude_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@id/magnitude_layout"
         android:orientation="vertical"
         android:padding="8dp">
 
         <TextView
-            android:textColor="@android:color/black"
-            android:textSize="16sp"
-            android:layout_margin="4dp"
             android:id="@+id/earthquake_place"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="8 KM SSW of a city" />
+            android:layout_margin="4dp"
+            android:text="8 KM SSW of a city"
+            android:textColor="@android:color/black"
+            android:textSize="16sp" />
 
         <TextView
-            android:textColor="@android:color/black"
-            android:textSize="16sp"
-            android:layout_margin="4dp"
             android:id="@+id/earthquake_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="24 Mar, 2020" />
+            android:layout_margin="4dp"
+            android:text="24 Mar, 2020"
+            android:textColor="@android:color/black"
+            android:textSize="16sp" />
 
     </LinearLayout>
 </RelativeLayout>

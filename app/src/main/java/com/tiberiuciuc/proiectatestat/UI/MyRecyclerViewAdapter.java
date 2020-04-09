@@ -45,7 +45,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         EarthQuake earthQuake = quakeList.get(position);
         holder.place.setText(earthQuake.getPlace());
-        double mag = Double.valueOf(new DecimalFormat("#.#").format(earthQuake.getMagnitude()));
+        double mag = earthQuake.getMagnitude();
         if(mag<=2) holder.magnitudeLayout.setBackgroundResource(R.drawable.shape_circle_green);
         else if(mag<=5) holder.magnitudeLayout.setBackgroundResource(R.drawable.shape_circle_yellow);
         else if(mag<=8) holder.magnitudeLayout.setBackgroundResource(R.drawable.shape_circle_orange);

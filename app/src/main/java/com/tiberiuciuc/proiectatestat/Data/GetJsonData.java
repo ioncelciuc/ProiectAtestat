@@ -10,6 +10,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -69,7 +70,7 @@ public class GetJsonData extends AsyncTask<String, Void, List<EarthQuake>> imple
                     String place = properties.getString("place");
                     String type = properties.getString("type");
                     long time = properties.getLong("time");
-                    double magnitude = properties.getDouble("mag");
+                    double magnitude = Double.valueOf(new DecimalFormat("#.#").format(properties.getDouble("mag")));
                     String detailLink = properties.getString("detail");
 
                     EarthQuake earthQuake = new EarthQuake(place, magnitude, time, detailLink, type, lat, lon);
